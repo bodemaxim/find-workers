@@ -1,19 +1,29 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import type { Ref } from 'vue'
+import { store } from '@/store/store'
+
 import type { IUser, ISimpleUserInfo } from '@/interfaces/IUser'
 
 import { getUser, getUsers } from '@/api/UsersSearchAPI'
 
 //#region Props и Emits
-
 const emits = defineEmits<{
   userView: [value: IUser | null]
 }>()
 //#endregion Props и Emits
 
-//#region Данные
+//#region Лоадер
+const setLoadingTrue = () => {
+  store.dispatch('toggleLoading', true)
+}
 
+const setLoadingFalse = () => {
+  store.dispatch('toggleLoading', false)
+}
+//#endregion Лоадер
+
+//#region Данные
 /**
  * Упрощенные данные пользователей.
  */
@@ -28,22 +38,23 @@ const searchQuery: Ref<string> = ref<string>('')
  * Результаты поиска.
  */
 const searchResults: Ref<IUser[]> = ref<IUser[]>([])
-
 //#endregion Данные
 
 //#region Методы
-
 /**
  * Искать сотрудников по ид или нескольким ид.
  */
 const onSearch = async () => {
+  if (searchQuery.value.length === 0) {
+    emits('userView', null)
+    searchResults.value = []
+    return
+  }
+
   const parsedQuery: number[] = parseSearchQuery(searchQuery.value)
-  console.log(parsedQuery)
 
   if (parsedQuery.length === 1) await searchUserById(parsedQuery[0])
   else if (parsedQuery.length > 1) await searchUsersByIds(parsedQuery)
-
-  console.log('апи', searchResults.value)
 }
 
 /**
@@ -69,12 +80,14 @@ const loadUsersDataForSearch = () => {
  * Поиск пользователя по одному ид.
  */
 const searchUserById = async (id: number) => {
+  setLoadingTrue()
+
   try {
     searchResults.value = await getUser(id)
   } catch (error) {
     console.log(error)
   } finally {
-    console.log('done!')
+    setLoadingFalse()
   }
 }
 
@@ -82,12 +95,14 @@ const searchUserById = async (id: number) => {
  * Поиск пользователей по нескольким ид.
  */
 const searchUsersByIds = async (ids: number[]) => {
+  setLoadingTrue()
+
   try {
     searchResults.value = await getUsers(ids)
   } catch (error) {
     console.log(error)
   } finally {
-    console.log('done!')
+    setLoadingFalse()
   }
 }
 
@@ -95,7 +110,7 @@ const searchUsersByIds = async (ids: number[]) => {
  * Преобразовать строковый запрос в массив идентификаторов.
  */
 const parseSearchQuery = (str: string): number[] => {
-  const arr: string[] = str.split(', ').map((s) => s.trim())
+  const arr: string[] = str.split(',').map((s) => s.trim())
   const result: number[] = []
 
   for (const item of arr) {
@@ -117,19 +132,24 @@ const viewUser = (user: IUser) => {
 }
 //#endregion Методы
 
-//#region Инициализация
+watch(
+  () => searchQuery.value,
+  () => onSearch()
+)
 
 loadUsersDataForSearch()
-
-//#endregion Инициализация
 </script>
 
 <template>
   <div class="container mt-5">
-    <form @submit.prevent="onSearch">
+    <form>
       <div class="input-group mb-3">
-        <input type="text" class="form-control" placeholder="Поиск..." v-model="searchQuery" />
-        <button class="btn btn-outline-secondary" type="submit">Искать</button>
+        <input
+          type="text"
+          class="form-control search-form"
+          placeholder="Поиск..."
+          v-model="searchQuery"
+        />
       </div>
     </form>
 
@@ -147,8 +167,20 @@ loadUsersDataForSearch()
 </template>
 
 <style scoped>
+@font-face {
+  font-family: 'Montserrat';
+  src: url('@/assets/fonts/Montserrat-Regular.ttf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 main {
   overflow-y: auto;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.search-form {
+  font-family: 'Montserrat', sans-serif;
 }
 
 .list-group {
