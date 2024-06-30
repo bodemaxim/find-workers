@@ -11,7 +11,6 @@ main {
   width: 100vw;
   height: 100vh;
   position: absolute;
-  
 }
 
 .loader {

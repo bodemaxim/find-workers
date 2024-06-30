@@ -12,32 +12,22 @@ import type { IUser } from '@/interfaces/IUser'
 const store = useStore()
 const isLoading = computed(() => store.getters.isLoading)
 
-//#region Данные
 const user: Ref<IUser | null> = ref<IUser | null>(null)
-//#endregion Данные
-
-//#region Методы
-
-//#endregion Методы
-
-//#region События
 
 const onUserViewChanged = (userView: IUser | null) => {
   user.value = userView
 }
-
-//#endregion События
 </script>
 
 <template>
   <main class="d-flex flex-column">
     <SpinningLoader v-if="isLoading" />
     <div class="mx-3 d-flex justify-content-between align-items-center">
-      <h1 class="text-danger">Жилфонд</h1>
+      <h1 class="text-danger company-title">Жилфонд</h1>
       <p>Пользователь</p>
     </div>
-    <div class="flex-grow-1 d-flex">
-      <div class="search-panel flex-grow-1 border rounded shadow m-3 p-3">
+    <div class="search-view-container">
+      <div class="search-panel">
         <SearchPanel @user-view="onUserViewChanged($event)" />
       </div>
       <div class="view-panel flex-grow-1 border rounded shadow m-3 p-3">
@@ -63,7 +53,7 @@ const onUserViewChanged = (userView: IUser | null) => {
   </main>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 main {
   height: 100vh;
   width: 100vw;
@@ -74,14 +64,40 @@ main {
   max-width: 30%;
 }
 
+.search-panel {
+  display: flex;
+  flex-grow: 1;
+  border: 1px solid #dee2e6;
+  border-radius: 0.25rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  margin: 1rem;
+  padding: 1rem;
+}
+
+.search-view-container {
+  display: flex;
+  flex-grow: 1;
+}
+
 /* XS */
 @media (min-width: 320px) and (max-width: 575px) {
   main {
     font-size: 12px;
   }
 
-  .hideOnMobile {
-    visibility: hidden;
+  .search-panel {
+    width: 100vw;
+    max-width: 100vw;
+    height: auto;
+    max-height: 60vh;
+  }
+
+  .search-view-container {
+    display: block;
+  }
+
+  .search-panel {
+    display: block;
   }
 }
 
@@ -90,27 +106,5 @@ main {
   main {
     font-size: 13px;
   }
-}
-
-/* M */
-@media (min-width: 768px) and (max-width: 991px) {
-  .navbar-toggler {
-    visibility: hidden;
-  }
-}
-
-/* L */
-@media (min-width: 992px) and (max-width: 1199px) {
-}
-/* XL */
-@media (min-width: 1200px) and (max-width: 1399px) {
-}
-
-/* XXL */
-@media (min-width: 1400px) {
-}
-
-/* Настройки высоты */
-@media (max-height: 650px) {
 }
 </style>

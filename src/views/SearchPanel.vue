@@ -85,7 +85,7 @@ const searchUserById = async (id: number) => {
   try {
     searchResults.value = await getUser(id)
   } catch (error) {
-    console.log(error)
+    alert(`Во время загрузки сотрудников произошла ошибка: ${error}`)
   } finally {
     setLoadingFalse()
   }
@@ -100,7 +100,7 @@ const searchUsersByIds = async (ids: number[]) => {
   try {
     searchResults.value = await getUsers(ids)
   } catch (error) {
-    console.log(error)
+    alert(`Во время загрузки сотрудников произошла ошибка: ${error}`)
   } finally {
     setLoadingFalse()
   }
@@ -142,6 +142,7 @@ loadUsersDataForSearch()
 
 <template>
   <div class="container mt-5">
+    <p><b>Поиск сотрудников</b></p>
     <form>
       <div class="input-group mb-3">
         <input
@@ -153,41 +154,54 @@ loadUsersDataForSearch()
       </div>
     </form>
 
-    <v-virtual-scroll :style="{ height: 'calc(100vh - 200px)' }" :items="searchResults">
+    <p class="mt-5"><b>Результаты</b></p>
+    <v-virtual-scroll
+      class="scrollable-container"
+      :items="searchResults"
+      v-if="searchResults.length > 0"
+    >
       <template v-slot:default="{ item }"
         ><p @click="viewUser(item)" class="border rounded mt-1 mb-1 p-3 user-item">
           {{ item.username }}
         </p></template
       >
     </v-virtual-scroll>
+    <p v-else>Не найдено</p>
   </div>
 </template>
 
-<style scoped>
-@font-face {
-  font-family: 'Montserrat';
-  src: url('@/assets/fonts/Montserrat-Regular.ttf') format('opentype');
-  font-weight: normal;
-  font-style: normal;
-}
+<style lang="scss" scoped>
+$font-family-main: 'Montserrat', sans-serif;
+$transition-time: 0.2s;
+$hover-background-color: lightskyblue;
 
 main {
   overflow-y: auto;
-  font-family: 'Montserrat', sans-serif;
+  font-family: $font-family-main;
 }
 
 .search-form {
-  font-family: 'Montserrat', sans-serif;
+  font-family: $font-family-main;
 }
 
 .user-item {
   margin: 0;
   padding: 0;
+  &:hover {
+    background-color: $hover-background-color;
+    cursor: pointer;
+    transition: $transition-time;
+  }
 }
 
-.user-item:hover {
-  background-color: lightskyblue;
-  cursor: pointer;
-  transition: 0.2s;
+.scrollable-container {
+  height: calc(100vh - 200px);
+}
+
+/* XS */
+@media (min-width: 320px) and (max-width: 575px) {
+  .scrollable-container {
+    height: calc(60vh - 100px);
+  }
 }
 </style>
