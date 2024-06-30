@@ -202,7 +202,7 @@ main {
 /* XS */
 @media (min-width: 320px) and (max-width: 575px) {
   .scrollable-container {
-    height: calc(60vh - 150px);
+    height: calc(60vh - 170px);
   }
 }
 </style>
