@@ -153,16 +153,13 @@ loadUsersDataForSearch()
       </div>
     </form>
 
-    <ul class="list-group">
-      <li
-        class="border rounded mt-1 mb-1 p-3"
-        v-for="item in searchResults"
-        v-bind:key="item.id"
-        @click="viewUser(item)"
+    <v-virtual-scroll :style="{ height: 'calc(100vh - 200px)' }" :items="searchResults">
+      <template v-slot:default="{ item }"
+        ><p @click="viewUser(item)" class="border rounded mt-1 mb-1 p-3 user-item">
+          {{ item.username }}
+        </p></template
       >
-        {{ item.username }}
-      </li>
-    </ul>
+    </v-virtual-scroll>
   </div>
 </template>
 
@@ -183,24 +180,12 @@ main {
   font-family: 'Montserrat', sans-serif;
 }
 
-.list-group {
-  max-height: calc(100% - 100px);
-  overflow-y: auto;
-}
-
-ul,
-ol {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-li {
+.user-item {
   margin: 0;
   padding: 0;
 }
 
-li:hover {
+.user-item:hover {
   background-color: lightskyblue;
   cursor: pointer;
   transition: 0.2s;

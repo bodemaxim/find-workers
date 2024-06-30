@@ -57,7 +57,7 @@ const onUserViewChanged = (userView: IUser | null) => {
           <p><b>Девиз: </b>{{ user.company.catchPhrase }}</p>
           <p><b>Вид деятельности: </b>{{ user.company.bs }}</p>
         </div>
-        <p v-else class="">Выберите сотрудника, чтобы посмотреть его профиль.</p>
+        <p v-else class="mt-7">Выберите сотрудника, чтобы посмотреть его профиль.</p>
       </div>
     </div>
   </main>
