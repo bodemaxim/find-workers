@@ -30,7 +30,7 @@ const onUserViewChanged = (userView: IUser | null) => {
       <div class="search-panel">
         <SearchPanel @user-view="onUserViewChanged($event)" />
       </div>
-      <div class="view-panel flex-grow-1 border rounded shadow m-3 p-3">
+      <div class="view-panel">
         <div v-if="user">
           <h2>{{ user.name }}</h2>
           <p><b>эл. почта: </b>{{ user.email }}</p>
@@ -59,19 +59,20 @@ main {
   width: 100vw;
 }
 
-.search-panel {
-  width: 30%;
-  max-width: 30%;
-}
-
-.search-panel {
+.search-panel,
+.view-panel {
   display: flex;
   flex-grow: 1;
   border: 1px solid #dee2e6;
-  border-radius: 0.25rem;
+  border-radius: 1rem;
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-  margin: 1rem;
-  padding: 1rem;
+  margin: 1em;
+  padding: 1em;
+}
+
+.search-panel {
+  width: 30%;
+  max-width: 30%;
 }
 
 .search-view-container {
@@ -86,17 +87,14 @@ main {
   }
 
   .search-panel {
-    width: 100vw;
-    max-width: 100vw;
+    display: block;
+    width: 100%;
+    max-width: calc(100% - 24px);
     height: auto;
     max-height: 60vh;
   }
 
   .search-view-container {
-    display: block;
-  }
-
-  .search-panel {
     display: block;
   }
 }

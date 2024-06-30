@@ -141,7 +141,7 @@ loadUsersDataForSearch()
 </script>
 
 <template>
-  <div class="container mt-5">
+  <main class="mt-5">
     <p><b>Поиск сотрудников</b></p>
     <form>
       <div class="input-group mb-3">
@@ -167,7 +167,7 @@ loadUsersDataForSearch()
       >
     </v-virtual-scroll>
     <p v-else>Не найдено</p>
-  </div>
+  </main>
 </template>
 
 <style lang="scss" scoped>
@@ -176,8 +176,9 @@ $transition-time: 0.2s;
 $hover-background-color: lightskyblue;
 
 main {
-  overflow-y: auto;
   font-family: $font-family-main;
+  overflow: hidden;
+  max-width: 100%;
 }
 
 .search-form {
@@ -201,7 +202,7 @@ main {
 /* XS */
 @media (min-width: 320px) and (max-width: 575px) {
   .scrollable-container {
-    height: calc(60vh - 100px);
+    height: calc(60vh - 150px);
   }
 }
 </style>
